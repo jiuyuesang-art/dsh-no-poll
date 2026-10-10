@@ -1,0 +1,53 @@
+{
+  "name": "dsh-no-poll",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Stop the model from polling long tasks: hand the wait to a background job and let the host wake it when the task ends. Includes cross-platform waiters (Python / PowerShell / Bash), a ComfyUI adapter, and a guide for adapting your own software. Zero dependencies.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "agent",
+    "mcp",
+    "no-poll",
+    "long-running",
+    "comfyui",
+    "background-job"
+  ],
+  "license": "MIT",
+  "author": "jiuyuesang-art",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiuyuesang-art/dsh-no-poll.git"
+  },
+  "homepage": "https://github.com/jiuyuesang-art/dsh-no-poll",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "engines": {
+      "dsh": ">=0.1.7-rc.1"
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.0-rc.2": "compatible"
+      }
+    }
+  },
+  "files": [
+    "cordis.patch.yml",
+    "plugin/",
+    "skills/",
+    "waiters/",
+    "examples/",
+    "README.md",
+    "MANUAL.md",
+    "MANUAL.zh-CN.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  }
+}

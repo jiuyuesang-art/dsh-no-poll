@@ -1,0 +1,46 @@
+# Bundle patch layer for dsh-no-poll.
+#
+# This bundle does exactly one thing: register a permanent "do not poll long tasks"
+# rule in the system prompt of EVERY session. It creates no preset -- once
+# installed it is always active, no matter which preset is selected.
+
+- insert:
+    # -- Permanent rule: hand the wait to a background job, let the host wake you --
+    #
+    # name MUST be a bare package specifier with a subpath, NEVER a relative path
+    # like ./plugin/no-poll.js.
+    #
+    # Observed failure with a relative path: the preset reports
+    #   no-poll (./plugin/no-poll.js): never started
+    # Cause: cordis-plugin-loader/lib/index.js:219-221 resolves relative names with
+    #   new URL(name, this.ctx.baseUrl).href
+    # and inside a bundle scope baseUrl may be a PLAIN PATH rather than a URL, so
+    # new URL() throws, the import fails, the entry never gets a fiber, and the
+    # registry reports "never started" (dsh-agent-preset-registry/lib/index.js:204
+    # tests exactly `fiber === undefined`).
+    #
+    # Bare specifiers take the other branch (line 223-226, a plain import(name))
+    # and resolve from the profile.
+    #
+    # NOTE: if you rename the package, update this specifier too.
+    - id: no-poll
+      name: 'dsh-no-poll/plugin/no-poll.js'
+      config:
+        enabled: true
+
+        # Where the rule sits in the system prompt (lower sorts earlier).
+        # Reference values from @deepseek-ai/dsh-system-prompt SECTION_ORDERS:
+        #   HARNESS_IDENTITY = -1000
+        #   DEPLOYMENT_PERSONA_PREFIX = 0     <- persona
+        #   PLAN_POLICY = 500                 <- policy
+        #   MCP_SERVERS = 3100                <- tool documentation
+        # 100 places it just after the persona and before the policies, so it is
+        # read as a behavioural rule.
+        order: 100
+
+        # false = minimal version (far fewer tokens per turn).
+        verbose: true
+
+        # Extra lines appended to the rule. Example:
+        #   - 'ComfyUI runs at http://127.0.0.1:8188; wait with waiters/wait.py comfyui'
+        extraLines: []
